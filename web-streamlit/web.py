@@ -1,7 +1,12 @@
 import streamlit as st
+from tensorflow import keras
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+
+import sys
+print(sys.path)
+print(tf.__file__)
 
 # Judul Aplikasi
 st.set_page_config(page_title="CNN Model Predictor", page_icon=":camera:")
@@ -10,7 +15,7 @@ st.set_page_config(page_title="CNN Model Predictor", page_icon=":camera:")
 @st.cache_resource
 def load_model():
     try:
-        model = tf.keras.models.load_model('C:\\Users\\andre\\Downloads\\model_96.h5')
+        model = keras.models.load_model('C:/Users/andre/Downloads/model_96.h5')
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
@@ -18,6 +23,9 @@ def load_model():
 
 # Fungsi preprocessing gambar
 def preprocess_image(image, target_size=(224, 224)):
+    
+    if image.mode == 'RGBA':
+        image = image.convert('RGB')
     # Resize gambar
     img = image.resize(target_size)
     
@@ -36,9 +44,10 @@ def predict_image(model, image):
     
     # Lakukan prediksi
     prediction = model.predict(processed_image)
+    print(prediction)
     
     # Definisikan label kelas (sesuaikan dengan model Anda)
-    class_labels = ['rag', 'cans', 'spoonfork', 'cardboard', 'plasticbottle', 'glassbottle', 'plasticbag', 'paper', 'watergallon', 'newspaper', 'ceramicsbowl', 'bottlecap', 'pen', 'tire', 'galvanizedsteel', 'disc']  # Ganti dengan label aktual
+    class_labels = ['bottlecap', 'cans', 'cardboard', 'ceramicsbowl', 'disc', 'galvanizedsteel', 'glassbottle', 'newspaper', 'paper', 'pen', 'plasticbag', 'plasticbottle', 'rag', 'spoonfork', 'tire', 'watergallon']
     
     # Dapatkan kelas dengan probabilitas tertinggi
     predicted_class = class_labels[np.argmax(prediction)]
