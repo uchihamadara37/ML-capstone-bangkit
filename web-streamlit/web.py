@@ -10,7 +10,7 @@ st.set_page_config(page_title="CNN Model Predictor", page_icon=":camera:")
 @st.cache_resource
 def load_model():
     try:
-        model = tf.keras.models.load_model('trained_cnn_model.h5')
+        model = tf.keras.models.load_model('C:\\Users\\andre\\Downloads\\model_96.h5')
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
@@ -38,7 +38,7 @@ def predict_image(model, image):
     prediction = model.predict(processed_image)
     
     # Definisikan label kelas (sesuaikan dengan model Anda)
-    class_labels = ['kelas1', 'kelas2', 'kelas3']  # Ganti dengan label aktual
+    class_labels = ['rag', 'cans', 'spoonfork', 'cardboard', 'plasticbottle', 'glassbottle', 'plasticbag', 'paper', 'watergallon', 'newspaper', 'ceramicsbowl', 'bottlecap', 'pen', 'tire', 'galvanizedsteel', 'disc']  # Ganti dengan label aktual
     
     # Dapatkan kelas dengan probabilitas tertinggi
     predicted_class = class_labels[np.argmax(prediction)]
