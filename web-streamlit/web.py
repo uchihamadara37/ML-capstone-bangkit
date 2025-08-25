@@ -15,7 +15,9 @@ st.set_page_config(page_title="CNN Model Predictor", page_icon=":camera:")
 @st.cache_resource
 def load_model():
     try:
-        model = keras.models.load_model('C:/Users/andre/Downloads/model_96.h5')
+        # model = keras.models.load_model('C:/Users/andre/Downloads/model_96.h5')
+        model = keras.models.load_model('https://drive.google.com/file/d/159YSwASvU6p2mv9KMVfG5xoh1gRtaIer/view?usp=sharing')
+        
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")
