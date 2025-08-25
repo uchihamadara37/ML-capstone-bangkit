@@ -3,6 +3,7 @@ from tensorflow import keras
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+import requests
 
 import sys
 print(sys.path)
@@ -13,12 +14,43 @@ st.set_page_config(page_title="CNN Model Predictor", page_icon=":camera:")
 
 # Muat model CNN yang sudah dilatih
 @st.cache_resource
-def load_model():
-    try:
-        # model = keras.models.load_model('C:/Users/andre/Downloads/model_96.h5')
-        model = keras.models.load_model('https://drive.google.com/file/d/159YSwASvU6p2mv9KMVfG5xoh1gRtaIer/view?usp=sharing')
+# def load_model():
+#     try:
+#         # model = keras.models.load_model('C:/Users/andre/Downloads/model_96.h5')
+#         model = keras.models.load_model('https://drive.google.com/file/d/159YSwASvU6p2mv9KMVfG5xoh1gRtaIer/view?usp=sharing')
         
+#         return model
+#     except Exception as e:
+#         st.error(f"Error loading model: {e}")
+#         return None
+
+@st.cache_resource
+def load_model():
+    # URL download langsung dari Google Drive
+    file_id = '159YSwASvU6p2mv9KMVfG5xoh1gRtaIer'
+    model_url = f'https://drive.google.com/uc?export=download&id={file_id}'
+    model_path = "model_96.h5" # Nama file untuk disimpan secara lokal
+
+    try:
+        # 1. Download file model jika belum ada
+        if not os.path.exists(model_path):
+            with st.spinner("Downloading model... this may take a moment."):
+                response = requests.get(model_url, stream=True)
+                # Pastikan request berhasil
+                response.raise_for_status()
+                
+                with open(model_path, "wb") as f:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        f.write(chunk)
+            st.success("Model downloaded successfully!")
+
+        # 2. Muat model dari file lokal yang sudah di-download
+        model = keras.models.load_model(model_path)
         return model
+
+    except requests.exceptions.RequestException as req_err:
+        st.error(f"Error downloading the model file: {req_err}")
+        return None
     except Exception as e:
         st.error(f"Error loading model: {e}")
         return None
