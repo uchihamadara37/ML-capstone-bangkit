@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 from PIL import Image
 import requests
+import os
 
 import sys
 print(sys.path)
